@@ -1,5 +1,13 @@
 package main
 
+import (
+	"path"
+	"path/filepath"
+
+	"github.com/gin-gonic/gin"
+	"github.com/sothengski/todolist-golang-angular/handlers"
+)
+
 func main() {
 	r := gin.Default()
 	r.NoRoute(func(c *gin.Context) {
@@ -7,8 +15,7 @@ func main() {
 		ext := filepath.Ext(file)
 		if file == "" || ext == "" {
 			c.File("./ui/dist/ui/index.html")
-		}
-		else{
+		} else {
 			c.File("./ui/dist/ui/" + path.Join(dir, file))
 		}
 	})
@@ -17,7 +24,6 @@ func main() {
 	r.POST("/todo", handlers.AddTodoHandler)
 	r.DELETE("/todo/:id", handlers.DeleteTodoHandler)
 	r.PUT("/todo", handlers.CompleteTodoHandler)
-
 
 	err := r.Run(":3000")
 	if err != nil {

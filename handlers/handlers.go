@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/sothengski/todolist-golang-angular/todo"
 )
 
 // GetTodoListHandler returns all current todo items
@@ -16,7 +17,7 @@ func GetTodoListHandler(c *gin.Context) {
 
 // AddTodoHandler adds a new todo to the todo list
 func AddTodoHandler(c *gin.Context) {
-	todoItem, statusCode, err := convertHTTPBodyTodo(c.Request.Body)
+	todoItem, statusCode, err := convertHTTPBodyToTodo(c.Request.Body)
 	if err != nil {
 		c.JSON(statusCode, err)
 		return
@@ -36,6 +37,7 @@ func DeleteTodoHandler(c *gin.Context) {
 
 // CompleteTodoHandler will complete a specified todo based on user http input
 func CompleteTodoHandler(c *gin.Context) {
+	todoItem, statusCode, err := convertHTTPBodyToTodo(c.Request.Body)
 	if err != nil {
 		c.JSON(statusCode, err)
 		return
@@ -47,7 +49,7 @@ func CompleteTodoHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, "")
 }
 
-func ConvertHTTPBodyToTodo(httBody io.ReadCloser) (todo.Todo, int, error) {
+func convertHTTPBodyToTodo(httpBody io.ReadCloser) (todo.Todo, int, error) {
 	body, err := ioutil.ReadAll(httpBody)
 	if err != nil {
 		return todo.Todo{}, http.StatusInternalServerError, err
